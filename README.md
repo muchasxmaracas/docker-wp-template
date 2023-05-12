@@ -3,6 +3,7 @@
 
 ## Prerequisites
 
+* Locally installed nginx
 * Your own domain -> otherwise set an entry in /etc/hosts
 * SSL via ACME -> otherwise change SSL settings in reverse proxy config
 
