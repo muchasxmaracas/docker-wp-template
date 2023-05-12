@@ -27,7 +27,7 @@ Enter domain including TLD (e.g.: google.com)
 
 `sed -i s/mydomain\.com/$MYDOMAIN/g /etc/nginx/sites-available/mydomain.com.conf`
 
-`mv /etc/nginx/sites-available/mydomain.com.conf /etc/nginx/sites-available/$MYDOMAIN.conf
+`mv /etc/nginx/sites-available/mydomain.com.conf /etc/nginx/sites-available/$MYDOMAIN.conf`
 
 `ln -s /etc/nginx/sites-available/$MYDOMAIN.conf /etc/sites-enabled/$MYDOMAIN.conf`
 
