@@ -1,0 +1,42 @@
+version: '3'
+
+services:
+  mariadb:
+    image: mariadb
+    restart: ${RESTART}
+    environment:
+      MYSQL_ROOT_PASSWORD: '${MYSQL_ROOT_PASSWORD}'
+      MYSQL_USER: '${MYSQL_USER}'
+      MYSQL_PASSWORD: '${MYSQL_PASSWORD}'
+      MYSQL_DATABASE: '${MYSQL_DATABASE}'
+    volumes:
+      - "./data/mysql:/var/lib/mysql"
+    healthcheck:
+      test: mysqladmin ping -h 127.0.0.1 -u root --password=$$MYSQL_ROOT_PASSWORD
+      interval: 5s
+      retries: 5
+
+  wordpress:
+    build: ./build/wordpress
+    environment:
+      WORDPRESS_DB_HOST: mariadb:3306
+      WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
+      WORDPRESS_DB_USER: ${MYSQL_USER}
+      WORDPRESS_DB_PASSWORD: ${MYSQL_PASSWORD}
+      WORDPRESS_TABLE_PREFIX: ${WORDPRESS_TABLE_PREFIX}
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    volumes:
+      - ./data/wordpress:/var/www/html
+    restart: ${RESTART}
+
+  nginx:
+    build: ./build/nginx
+    volumes:
+      - ./data/wordpress:/var/www/html
+    ports:
+      - '127.0.0.1:12441:80'
+    depends_on:
+      - wordpress
+    restart: ${RESTART}
